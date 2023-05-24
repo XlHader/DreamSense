@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-#include "Controllers/BluetoothController/BluetoothController.h"
-#include "Controllers/MpuController/MpuController.h"
-#include "Controllers/LedController/LedController.h"
+#include "controllers/BluetoothController/BluetoothController.h"
+#include "controllers/MpuController/MpuController.h"
+#include "controllers/LedController/LedController.h"
 
 BluetoothController bluetoothController;
 MpuController mpuController;
@@ -12,7 +12,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Iniciando...");
 
-  ledController.setup();
+  ledController.setup(); 
   mpuController.setup();
   bluetoothController.setup();
 }
