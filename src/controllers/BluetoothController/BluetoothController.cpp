@@ -2,7 +2,8 @@
 
 bool BluetoothController::deviceConnected = false;
 
-void BluetoothController::setup() {
+void BluetoothController::setup()
+{
   // Inicializar BLE
   BLEDevice::init(DEVICE_NAME);
   BLEServer *espServer = BLEDevice::createServer();
@@ -11,6 +12,7 @@ void BluetoothController::setup() {
   // Configurar servicios y características
   configureLedService(espServer);
   configureMpuService(espServer);
+  configureMaxService(espServer);
 
   // Iniciar servicios
   startServices(espServer);
@@ -19,7 +21,14 @@ void BluetoothController::setup() {
   configureAndStartAdvertising();
 }
 
-void BluetoothController::setMpuCharacteristicValue(std::string value) {
+void BluetoothController::setMpuCharacteristicValue(std::string value)
+{
   mpuCharacteristic->setValue(value);
   mpuCharacteristic->notify();
+}
+
+void BluetoothController::setMaxCharacteristicValue(std::string value)
+{
+  maxCharacteristic->setValue(value);
+  maxCharacteristic->notify();
 }

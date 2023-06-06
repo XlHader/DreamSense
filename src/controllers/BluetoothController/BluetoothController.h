@@ -13,6 +13,7 @@ class BluetoothController {
 public:
   void setup();
   void setMpuCharacteristicValue(std::string value);
+  void setMaxCharacteristicValue(std::string value);
   
   static bool deviceConnected;
   
@@ -21,10 +22,13 @@ private:
   const std::string LED_CHARACTERISTIC_UUID = "00002a56-0000-1000-8000-00805f9b34fb";
   const std::string MPU_SERVICE_UUID = "6a4ef4e8-5f42-4703-8966-0528516cbd76";
   const std::string MPU_CHARACTERISTIC_UUID = "6a4ef4e2-5f42-4703-8966-0528516cbd76";
+  const std::string MAX_SERVICE_UUID = "6a4ef4e8-5f42-4703-8966-0528516cbd77";
+  const std::string MAX_CHARACTERISTIC_UUID = "6a4ef4e2-5f42-4703-8966-0528516cbd77";
   const std::string DEVICE_NAME = "DreamSense";
 
   BLECharacteristic *ledCharacteristic;
   BLECharacteristic *mpuCharacteristic;
+  BLECharacteristic *maxCharacteristic;
 
   void configureLedService(BLEServer *espServer) {
     BLEService *ledService = espServer->createService(LED_SERVICE_UUID);
@@ -51,6 +55,18 @@ private:
     mpuService->start();
   }
 
+  void configureMaxService(BLEServer *espServer) {
+    BLEService *maxService = espServer->createService(MAX_SERVICE_UUID);
+    maxCharacteristic = maxService->createCharacteristic(
+        MAX_CHARACTERISTIC_UUID,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE |
+            BLECharacteristic::PROPERTY_NOTIFY |
+            BLECharacteristic::PROPERTY_INDICATE);
+    maxCharacteristic->setValue("{}");
+    maxService->start();
+  }
+
   void startServices(BLEServer *espServer) {
     espServer->startAdvertising();
   }
@@ -59,6 +75,7 @@ private:
     BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->addServiceUUID(LED_SERVICE_UUID);
     pAdvertising->addServiceUUID(MPU_SERVICE_UUID);
+    pAdvertising->addServiceUUID(MAX_SERVICE_UUID);
     pAdvertising->setScanResponse(true);
     pAdvertising->setMinPreferred(0x06);
     pAdvertising->setMinPreferred(0x12);
