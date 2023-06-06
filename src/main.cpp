@@ -14,7 +14,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Iniciando...");
 
-  ledController.setup();
+  ledController.setup(); 
   mpuController.setup();
   maxController.setup();
   bluetoothController.setup();
